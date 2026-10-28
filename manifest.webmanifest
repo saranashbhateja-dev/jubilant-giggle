@@ -1,0 +1,10 @@
+{
+  "name": "JEE Rush OS",
+  "short_name": "JEE Rush",
+  "description": "A focused lecture and question-practice tracker for JEE preparation.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#10131d",
+  "theme_color": "#10131d",
+  "icons": []
+}

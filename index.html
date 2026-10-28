@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10131d">
+  <meta name="description" content="JEE Rush OS — a focused lecture and question-practice tracker for Physics, Chemistry and Mathematics.">
+  <title>JEE Rush OS</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <section class="auth-screen" id="authScreen" aria-labelledby="authTitle" hidden>
+    <div class="auth-glow auth-glow-one"></div><div class="auth-glow auth-glow-two"></div>
+    <div class="auth-card">
+      <a class="brand auth-brand" href="#" aria-label="JEE Rush OS"><span class="brand-mark">⚡</span><span><strong>JEE RUSH</strong><small>STUDY SYSTEM</small></span></a>
+      <p class="eyebrow">YOUR STUDY SPACE</p>
+      <h1 id="authTitle">Welcome back.</h1>
+      <p class="auth-subtitle" id="authSubtitle">Sign in to continue your JEE preparation.</p>
+      <form id="authForm" autocomplete="on">
+        <input id="authMode" type="hidden" value="login">
+        <label class="field-label" for="authEmail">Email address</label>
+        <input class="settings-input auth-input" id="authEmail" type="email" placeholder="you@example.com" autocomplete="email" required>
+        <label class="field-label" for="authPassword">Password</label>
+        <input class="settings-input auth-input" id="authPassword" type="password" placeholder="At least 6 characters" autocomplete="current-password" minlength="6" required>
+        <button class="primary-button auth-submit" id="authSubmit" type="submit">Log in</button>
+      </form>
+      <button class="auth-link" id="forgotPassword" type="button">Forgot password?</button>
+      <p class="auth-message" id="authMessage" role="status" hidden></p>
+      <div class="auth-divider"><span></span><small>ONE ACCOUNT · ALL DEVICES</small><span></span></div>
+      <button class="auth-mode-toggle" id="authModeToggle" type="button">New here? Create an account</button>
+      <p class="auth-privacy">Your progress is private to your account and syncs through Supabase.</p>
+    </div>
+  </section>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#dashboard" aria-label="JEE Rush OS home">
+        <span class="brand-mark">⚡</span>
+        <span><strong>JEE RUSH</strong><small>STUDY SYSTEM</small></span>
+      </a>
+      <div class="sidebar-label">WORKSPACE</div>
+      <nav class="main-nav" aria-label="Main navigation">
+        <button class="nav-item active" data-view="dashboard"><span>▦</span> Dashboard</button>
+        <button class="nav-item" data-view="curriculum"><span>▤</span> Curriculum <span class="nav-count">54</span></button>
+        <button class="nav-item" data-view="schedule"><span>▦</span> Schedule</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="side-note"><span class="live-dot"></span><span><strong>One lecture a day</strong><small>Start date · <span id="sidebarStartDate">29 Nov 2026</span></small></span></div>
+        <button class="nav-item settings-nav" id="openSettings"><span>⚙</span> Settings & sync</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="mobile-brand"><span class="brand-mark">⚡</span><strong>JEE RUSH OS</strong></div>
+        <div class="breadcrumb"><span>JEE RUSH OS</span><b>/</b><strong id="breadcrumbCurrent">Dashboard</strong></div>
+        <div class="top-actions">
+          <span class="sync-indicator" id="syncStatus"><span class="status-dot"></span> Local progress saved</span>
+          <button class="icon-button" id="topSettings" aria-label="Open settings" title="Settings">⚙</button>
+        </div>
+      </header>
+
+      <nav class="mobile-nav" aria-label="Mobile navigation"><button class="nav-item active" data-view="dashboard"><span>▦</span> Dashboard</button><button class="nav-item" data-view="curriculum"><span>▤</span> Curriculum</button><button class="nav-item" data-view="schedule"><span>▦</span> Schedule</button></nav>
+
+      <section class="view active" id="dashboardView">
+        <div class="page-heading">
+          <div><p class="eyebrow">YOUR PREPARATION, ORGANIZED</p><h1 id="dashboardGreeting">Keep the streak moving.</h1><p class="subheading">One lecture. One practice session. Every day.</p></div>
+          <div class="date-chip"><span class="date-chip-icon">◷</span><span><small>PLAN STARTS</small><strong id="dashboardStartDate">29 NOV 2026</strong></span></div>
+        </div>
+
+        <div class="stats-grid" id="statsGrid">
+          <article class="stat-card stat-primary"><div class="stat-top"><span>Overall completion</span><span class="stat-symbol">↗</span></div><div class="stat-value"><strong id="overallPercent">0%</strong><span id="overallCount">0 / 54 chapters</span></div><div class="progress-track"><span id="overallBar"></span></div><small>Chapter complete when lecture and practice are both checked</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Lectures completed</span><span class="stat-symbol">▶</span></div><div class="stat-value"><strong id="lectureCount">0</strong><span>of 54</span></div><div class="mini-track"><span id="lectureBar"></span></div><small>Track each lecture independently</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Question practice</span><span class="stat-symbol">✓</span></div><div class="stat-value"><strong id="practiceCount">0</strong><span>of 54</span></div><div class="mini-track practice-track"><span id="practiceBar"></span></div><small>One practice checkbox per lecture</small></article>
+        </div>
+
+        <div class="section-heading"><div><p class="eyebrow">NEXT ON YOUR PLAN</p><h2 id="focusHeading">Your next lecture</h2></div><button class="text-button" data-go="schedule">View full schedule <span>→</span></button></div>
+        <div id="focusCard" class="focus-card"></div>
+
+        <div class="section-heading subject-heading" id="subjectBreakdownSection"><div><p class="eyebrow">SUBJECT BREAKDOWN</p><h2>Three subjects. One rotation.</h2></div><button class="text-button" data-go="curriculum">Open curriculum <span>→</span></button></div>
+        <div class="subject-grid" id="subjectCards"></div>
+        <div class="section-heading recent-heading" id="upcomingSection"><div><p class="eyebrow">YOUR CHECKLIST</p><h2>Upcoming chapters</h2></div><span class="muted-label" id="upcomingSectionLabel">Showing next 4 chapters</span></div>
+        <div class="table-card" id="upcomingTable"><div class="chapter-list compact-list" id="upcomingList"></div></div>
+      </section>
+
+      <section class="view" id="curriculumView">
+        <div class="page-heading compact-heading"><div><p class="eyebrow">THE FULL ROADMAP</p><h1>Your curriculum.</h1><p class="subheading">54 chapters · Original chapter order and video links preserved.</p></div></div>
+        <div class="curriculum-tools"><div class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="Search chapters…" aria-label="Search chapters"></div><div class="filter-tabs" id="subjectFilters"><button class="filter-tab active" data-filter="All">All <span>54</span></button><button class="filter-tab" data-filter="Physics">Physics <span>20</span></button><button class="filter-tab" data-filter="Chemistry">Chemistry <span>19</span></button><button class="filter-tab" data-filter="Mathematics">Maths <span>15</span></button></div></div>
+        <div id="curriculumGroups" class="curriculum-groups"></div>
+      </section>
+
+      <section class="view" id="scheduleView">
+        <div class="page-heading compact-heading"><div><p class="eyebrow">DAILY PLAN</p><h1>The lecture schedule.</h1><p class="subheading" id="scheduleSubheading">Starts 29 Nov 2026 · One lecture per day · Physics → Chemistry → Mathematics.</p></div><div class="schedule-summary"><strong id="scheduleDays">54</strong><span>planned days</span></div></div>
+        <div class="schedule-note"><span class="note-icon">i</span><p>When a subject runs out of chapters, the rotation skips it and continues with the remaining subjects. No tests or revision tasks are included.</p></div>
+        <div class="schedule-tools"><div class="search-box"><span>⌕</span><input id="scheduleSearch" type="search" placeholder="Find a scheduled chapter…" aria-label="Search schedule"></div><select id="scheduleStatus" aria-label="Filter schedule"><option value="all">All chapters</option><option value="pending">Not fully complete</option><option value="complete">Fully complete</option></select></div>
+        <div class="table-card"><div class="schedule-list" id="scheduleList"></div></div>
+      </section>
+
+      <footer class="app-footer"><span>JEE RUSH OS <span class="footer-dot">•</span> Built for consistency.</span><span id="footerSaveStatus">Progress saves on this device.</span></footer>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="settingsModal" hidden>
+    <section class="settings-modal settings-modal-wide" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+      <div class="modal-heading"><div><p class="eyebrow">PERSONALIZE YOUR WORKSPACE</p><h2 id="settingsTitle">Settings & sync</h2><p class="settings-copy">Customize your plan, dashboard and appearance. Preferences sync with your account.</p></div><button class="icon-button" id="closeSettings" aria-label="Close settings">✕</button></div>
+
+      <div class="settings-section account-section">
+        <h3>Account & cloud sync</h3><p class="account-email" id="settingsAccountEmail">—</p>
+        <p class="settings-copy">Log in with this same account on your PC and Android APK to keep progress and preferences synchronized.</p>
+        <div class="settings-actions"><button class="primary-button" id="syncNow">Sync now</button><button class="secondary-button" id="logoutButton">Log out</button></div>
+        <p class="inline-status" id="settingsStatus" role="status">Your progress syncs automatically.</p>
+      </div>
+
+      <div class="settings-section">
+        <h3>Study plan</h3><p class="settings-copy">The default is one chapter per day, rotating Physics → Chemistry → Mathematics, starting 29 November 2026.</p>
+        <div class="settings-grid">
+          <label class="setting-field"><span>Plan start date</span><input class="settings-input" type="date" data-setting="startDate" value="2026-11-29"></label>
+          <label class="setting-field"><span>Lectures per day</span><select class="settings-input" data-setting="lecturesPerDay"><option value="1">1 — steady pace</option><option value="2">2 — accelerated</option><option value="3">3 — intensive</option></select></label>
+          <label class="setting-field setting-field-wide"><span>Subject rotation</span><select class="settings-input" data-setting="rotation"><option value="Physics,Chemistry,Mathematics">Physics → Chemistry → Mathematics</option><option value="Physics,Mathematics,Chemistry">Physics → Mathematics → Chemistry</option><option value="Chemistry,Physics,Mathematics">Chemistry → Physics → Mathematics</option><option value="Chemistry,Mathematics,Physics">Chemistry → Mathematics → Physics</option><option value="Mathematics,Physics,Chemistry">Mathematics → Physics → Chemistry</option><option value="Mathematics,Chemistry,Physics">Mathematics → Chemistry → Physics</option></select></label>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3>Appearance</h3><p class="settings-copy">Choose a theme and adjust the visual density of the app. Changes apply immediately.</p>
+        <div class="settings-grid">
+          <label class="setting-field"><span>Theme</span><select class="settings-input" data-setting="theme"><option value="dark">Dark</option><option value="light">Light</option><option value="system">Follow device</option></select></label>
+          <label class="setting-field"><span>Accent color</span><select class="settings-input" data-setting="accent"><option value="#ff9d42">Amber</option><option value="#7c83ff">Indigo</option><option value="#4bbf9b">Emerald</option><option value="#55a7ff">Sky blue</option><option value="#ef6b9a">Rose</option><option value="#c28aff">Violet</option><option value="#e0b341">Gold</option></select></label>
+          <label class="setting-field"><span>Layout density</span><select class="settings-input" data-setting="density"><option value="comfortable">Comfortable</option><option value="compact">Compact</option></select></label>
+          <label class="setting-field"><span>Text size</span><select class="settings-input" data-setting="textSize"><option value="small">Small</option><option value="standard">Standard</option><option value="large">Large</option></select></label>
+          <label class="setting-field"><span>Date format</span><select class="settings-input" data-setting="dateFormat"><option value="long">29 Nov 2026</option><option value="short">29 Nov</option><option value="iso">2026-11-29</option></select></label>
+          <label class="setting-field"><span>Display name <small>(optional)</small></span><input class="settings-input" type="text" maxlength="40" placeholder="What should the dashboard call you?" data-setting="displayName"></label>
+        </div>
+        <div class="settings-toggle-list">
+          <label class="setting-toggle"><span><strong>Animations</strong><small>Use subtle transitions between views.</small></span><input type="checkbox" data-setting="animations" checked></label>
+          <label class="setting-toggle"><span><strong>Show chapter numbers</strong><small>Display the numbered badge on each chapter row.</small></span><input type="checkbox" data-setting="showChapterNumbers" checked></label>
+          <label class="setting-toggle"><span><strong>Open video links in a new tab</strong><small>Keep JEE Rush OS open while watching a lecture.</small></span><input type="checkbox" data-setting="openLinksNewTab" checked></label>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3>Dashboard layout</h3><p class="settings-copy">Choose which panels appear on your dashboard.</p>
+        <div class="settings-grid">
+          <label class="setting-field"><span>Upcoming chapter count</span><select class="settings-input" data-setting="upcomingCount"><option value="2">2 chapters</option><option value="4">4 chapters</option><option value="6">6 chapters</option><option value="8">8 chapters</option><option value="12">12 chapters</option></select></label>
+        </div>
+        <div class="settings-toggle-list">
+          <label class="setting-toggle"><span><strong>Progress statistics</strong><small>Show completion, lecture and practice cards.</small></span><input type="checkbox" data-setting="showStats" checked></label>
+          <label class="setting-toggle"><span><strong>Subject cards</strong><small>Show Physics, Chemistry and Mathematics summaries.</small></span><input type="checkbox" data-setting="showSubjectCards" checked></label>
+          <label class="setting-toggle"><span><strong>Upcoming chapters</strong><small>Show your next scheduled chapters and checkboxes.</small></span><input type="checkbox" data-setting="showUpcoming" checked></label>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3>Backup & restore</h3><p class="settings-copy">Export progress and preferences to JSON, or import a previous backup.</p>
+        <div class="settings-actions"><button class="secondary-button" id="exportBackup">Export backup</button><label class="secondary-button file-button" for="importBackup">Import backup</label><input id="importBackup" type="file" accept="application/json,.json" hidden></div>
+      </div>
+
+      <div class="settings-section">
+        <h3>Restore defaults</h3><p class="settings-copy">Restore the default start date, rotation, appearance and dashboard layout without deleting your progress.</p><button class="secondary-button" id="resetSettings">Restore default settings</button>
+      </div>
+
+      <div class="settings-section danger-section"><h3>Reset progress</h3><p class="settings-copy">Clear all lecture and question-practice checkboxes for this account. This syncs to your other devices.</p><div class="settings-toggle-inline"><label><input type="checkbox" data-setting="confirmReset" checked> Ask for confirmation before resetting</label></div><button class="danger-button" id="resetProgress">Reset all checkboxes</button></div>
+    </section>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="data.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.52.0/dist/umd/supabase.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
